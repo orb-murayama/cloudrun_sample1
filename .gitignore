@@ -1,0 +1,7 @@
+# OS依存ファイル
+.DS_Store
+.vscode
+Thumbs.db
+
+# 環境変数定義
+.env

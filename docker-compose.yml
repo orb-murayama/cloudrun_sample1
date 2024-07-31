@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    platform: linux/x86_64  # Apple Siliconの場合にデフォルトがarm64になるため明示的に設定
+    ports:
+      - '${MAPPING_PORT_HTTP}'

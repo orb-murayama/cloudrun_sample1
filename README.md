@@ -1,6 +1,74 @@
 # Cloud Run Sample 1
 
+## Goモジュールの初期化
+
+```bash:
+-- Goモジュールの初期化
+% go mod init helloworld
+
+-- Goのバージョン変更（go 1.22.5 <-- 1.20）
+% vi go.mod
+  --------------------------------------------------
+  module helloworld
+
+  go 1.20
+  --------------------------------------------------
+```
+
+## Google Cloud Platform の設定
+```
+-- 次のページで「Cloud Run」「Cloud Build」を有効にする
+https://console.cloud.google.com/cloud-build/settings/service-account?hl=ja&project=topodaisy
+```
+
+
 ## リリース方法
+```bash:
+-- Google Cloud プロジェクトの設定
+% gcloud init
+
+-- ユーザーアカウントのログイン
+% gcloud auth login
+
+-- コンテナイメージのビルド
+% gcloud builds submit --tag gcr.io/topodaisy/helloworld
+
+-- Cloud Run にデプロイ
+% gcloud run deploy helloworld --image gcr.io/topodaisy/helloworld --platform managed   
+```
+
+
+## 動作確認
+```
+-- ブラウザで次のURLにアクセス
+https://helloworld-qxhavcoa2a-de.a.run.app
+```
+
+
+## ローカルでの実行
+
+### 初期設定
+```bash:
+-- .envを作成
+% cp .env.default .env
+
+-- 自身のローカル環境に合わせて.envを設定
+% code .env
+```
+
+### docker-compose実行
+```bash:
+% docker-compose -up -d
+```
+
+### 動作確認
+```
+-- ブラウザで次のURLにアクセス
+http://localhost:8080/
+```
+
+
+## 初回リリース履歴
 
 ・Goモジュールの初期化
 ```bash:
