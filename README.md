@@ -1,9 +1,15 @@
 # Cloud Run Sample 1
 
+## 前提条件
+・次のアプリケーションがインストールされていること  
+Google Cloud CLI  
+Golang  
+
+
 ## Goモジュールの初期化
 
 ```bash:
--- Goモジュールの初期化
+-- Goプロジェクトの初期化（go.modファイルが作成される）
 % go mod init helloworld
 
 -- Goのバージョン変更（go 1.22.5 <-- 1.20）
@@ -34,7 +40,7 @@ https://console.cloud.google.com/cloud-build/settings/service-account?hl=ja&proj
 % gcloud builds submit --tag gcr.io/topodaisy/helloworld
 
 -- Cloud Run にデプロイ
-% gcloud run deploy helloworld --image gcr.io/topodaisy/helloworld --platform managed   
+% gcloud run deploy helloworld --image gcr.io/topodaisy/helloworld --platform managed
 ```
 
 
@@ -47,7 +53,8 @@ https://helloworld-qxhavcoa2a-de.a.run.app
 
 ## ローカルでの実行
 
-### 初期設定
+### docker-composeでの実行
+#### 初期設定
 ```bash:
 -- .envを作成
 % cp .env.default .env
@@ -56,9 +63,15 @@ https://helloworld-qxhavcoa2a-de.a.run.app
 % code .env
 ```
 
-### docker-compose実行
+#### docker-compose ビルドと実行
 ```bash:
+% docker-compose build --no-cache
 % docker-compose -up -d
+```
+
+### ターミナルで直接実行
+```bash:
+% go run main.go
 ```
 
 ### 動作確認
@@ -639,3 +652,17 @@ https://console.cloud.google.com/cloud-build/settings/service-account?hl=ja&proj
   https://helloworld-qxhavcoa2a-de.a.run.app
 ```
 
+
+・Goモジュールの追加（main.goにモジュールを追加後に実行）
+```bash:
+% go mod tidy
+  --------------------------------------------------
+  go: finding module for package github.com/joho/godotenv
+  go: found github.com/joho/godotenv in github.com/joho/godotenv v1.5.1
+  --------------------------------------------------
+```
+
+### ターミナルで環境変数を設定して直接実行
+```bash:
+% LINE_BOT_CHANNEL_SECRET=499fff LINE_BOT_CHANNEL_TOKEN=7TZ+R go run main.go
+```

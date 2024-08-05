@@ -1,0 +1,8 @@
+# OS依存ファイル
+.DS_Store
+.vscode
+Thumbs.db
+
+.gcloudignore
+.git
+.gitignore

@@ -4,6 +4,14 @@ FROM golang:1.20 AS builder
 
 # Copy local code to the container image.
 WORKDIR /app
+
+# Goモジュールファイルと.envファイルをコピー
+#COPY go.mod go.sum ./
+#COPY .env ./
+
+# 依存関係をインストール
+#RUN go mod download
+
 COPY . .
 
 # Build the binary.
