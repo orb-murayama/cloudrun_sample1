@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"os"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -52,6 +54,7 @@ func main() {
 	mux.HandleFunc("/sample7", sample7)
 	mux.HandleFunc("/sample8", sample8)
 	mux.HandleFunc("/sample9", sample9)
+	mux.HandleFunc("/sample10", sample10)
 	mux.HandleFunc("/linecallback", linecallback)
 	mux.HandleFunc("/linecallback2", linecallback2)
 
@@ -286,22 +289,61 @@ func sample9(w http.ResponseWriter, r *http.Request) {
 }
 
 /**
+ * MySQLの操作（1レコード取得）
+ */
+func sample10(w http.ResponseWriter, r *http.Request) {
+	// 環境変数を取得
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbDatabase := os.Getenv("DB_DATABASE")
+	fmt.Println("DB_USER", dbUser)
+	fmt.Println("DB_PASSWORD", dbPassword)
+	fmt.Println("DB_HOST", dbHost)
+	fmt.Println("DB_PORT", dbPort)
+	fmt.Println("DB_DATABASE", dbDatabase)
+
+	// レコード定義
+	type Item struct {
+		code   string
+		name   string
+		imgUrl string
+	}
+	var item Item
+
+	// DB接続
+	connString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
+	db, err := sql.Open("mysql", connString)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	code := "001"
+	if err := db.QueryRow("SELECT code, name, img_url FROM items WHERE code = ? LIMIT 1", code).Scan(&item.code, &item.name, &item.imgUrl); err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(item.code, item.name, item.imgUrl)
+
+	// レスポンスとしてパラメータを表示
+	fmt.Fprintf(w, "code: %s, name: %v, imgUrl: %v", item.code, item.name, item.imgUrl)
+}
+
+/**
  * LINE BOT
  */
 func linecallback(w http.ResponseWriter, r *http.Request) {
-	log.Println("linecallback 1")
 	// 環境変数を取得
 	secret := os.Getenv("LINE_BOT_CHANNEL_SECRET")
 	token := os.Getenv("LINE_BOT_CHANNEL_TOKEN")
 
-	log.Println("linecallback 2")
 	// BOTを初期化
 	bot, botErr := linebot.New(secret, token)
 	if botErr != nil {
 		log.Fatal(botErr)
 	}
 
-	log.Println("linecallback 3")
 	// リクエストからBOTのイベントを取得
 	events, parseErr := bot.ParseRequest(r)
 	if parseErr != nil {
@@ -313,7 +355,6 @@ func linecallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Println("linecallback 4")
 	for _, event := range events {
 		// イベントがメッセージ受信だった場合
 		if event.Type == linebot.EventTypeMessage {
@@ -326,7 +367,6 @@ func linecallback(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-	log.Println("linecallback 5")
 }
 
 /**

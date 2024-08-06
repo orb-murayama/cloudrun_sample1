@@ -664,5 +664,5 @@ https://console.cloud.google.com/cloud-build/settings/service-account?hl=ja&proj
 
 ### ターミナルで環境変数を設定して直接実行
 ```bash:
-% LINE_BOT_CHANNEL_SECRET=499fff LINE_BOT_CHANNEL_TOKEN=7TZ+R go run main.go
+% LINE_BOT_CHANNEL_SECRET=499fff・・・ LINE_BOT_CHANNEL_TOKEN=7TZ+R・・・ go run main.go
 ```
