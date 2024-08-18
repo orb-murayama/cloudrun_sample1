@@ -40,7 +40,7 @@ https://console.cloud.google.com/cloud-build/settings/service-account?hl=ja&proj
 % gcloud builds submit --tag gcr.io/topodaisy/helloworld
 
 -- Cloud Run にデプロイ
-% gcloud run deploy helloworld --image gcr.io/topodaisy/helloworld --platform managed
+% gcloud run deploy helloworld --image gcr.io/topodaisy/helloworld --region us-central1 --platform managed
 ```
 
 
@@ -629,9 +629,9 @@ https://console.cloud.google.com/cloud-build/settings/service-account?hl=ja&proj
   [39] us-west3
   [40] us-west4
   [41] cancel
-  Please enter numeric choice or text value (must exactly match list item):  2
+  Please enter numeric choice or text value (must exactly match list item):  32
 
-  To make this the default region, run `gcloud config set run/region asia-east1`.
+  To make this the default region, run `gcloud config set run/region us-central1`.
 
   Allow unauthenticated invocations to [helloworld] (y/N)?  y
 

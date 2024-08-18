@@ -294,15 +294,14 @@ func sample9(w http.ResponseWriter, r *http.Request) {
 func sample10(w http.ResponseWriter, r *http.Request) {
 	// 環境変数を取得
 	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbDatabase := os.Getenv("DB_DATABASE")
+	dbPass := os.Getenv("DB_PASS")
+	dbProtocol := os.Getenv("DB_PROTOCOL")
+	dbName := os.Getenv("DB_NAME")
+
 	fmt.Println("DB_USER", dbUser)
-	fmt.Println("DB_PASSWORD", dbPassword)
-	fmt.Println("DB_HOST", dbHost)
-	fmt.Println("DB_PORT", dbPort)
-	fmt.Println("DB_DATABASE", dbDatabase)
+	fmt.Println("DB_PASS", dbPass)
+	fmt.Println("DB_PROTOCOL", dbProtocol)
+	fmt.Println("DB_NAME", dbName)
 
 	// レコード定義
 	type Item struct {
@@ -313,9 +312,10 @@ func sample10(w http.ResponseWriter, r *http.Request) {
 	var item Item
 
 	// DB接続
-	connString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbDatabase)
-	db, err := sql.Open("mysql", connString)
+	dsn := fmt.Sprintf("%s:%s@%s/%s?charset=utf8&parseTime=true", dbUser, dbPass, dbProtocol, dbName)
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
+		log.Fatal("DB Open：", err)
 		panic(err.Error())
 	}
 	defer db.Close()
